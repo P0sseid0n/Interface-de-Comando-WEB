@@ -2,7 +2,7 @@ const socket = io()
 const input = document.querySelector('input')
 
 input.addEventListener('keyup', event => {
-	if (a.key != 'Enter') return
+	if (event.key != 'Enter') return
 	if (input.value.trim() == '') return
 
 	socket.emit('userCommand', input.value.trim())
@@ -10,7 +10,10 @@ input.addEventListener('keyup', event => {
 })
 
 window.addEventListener('keyup', e => {
-	console.log(e)
+	if (document.activeElement == input) return
+
+	if (e.key.length == 1) input.value += e.key
+	input.focus()
 })
 
 socket.on('renderCommand', ({ author, msg }) => {
