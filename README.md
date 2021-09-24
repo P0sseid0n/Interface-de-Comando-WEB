@@ -36,4 +36,4 @@ Recebe dados de outros projetos e passa para a interface
 1. Clone o repositorio
 2. Entre no arquivo pelo terminal
 3. Digite `npm i` no terminal
-4. Uso o nodemon globalmente mas pode instala-lo usando `npm i nodemon -D` e depois usar `nodemon` no terminal
+4. Digite `node index` no terminal

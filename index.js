@@ -1,11 +1,14 @@
 const path = require('path')
 const express = require('express')
 const app = express()
+const helmet = require('helmet')
 
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
+app.use(helmet())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'view'))
 app.set('view engine', 'ejs')
 app.use(express.json())
@@ -35,7 +38,9 @@ io.on('connection', socket => {
 	})
 })
 
-app.get('/', (req, res) => res.render('console'))
+app.get('/', (req, res) => {
+	res.setHeader('X-Powered-By', 'Doutrinas').render('console')
+})
 
 app.post('/', (req, res) => {
 	const { author, msg } = req.body
