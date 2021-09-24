@@ -1,12 +1,10 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-const helmet = require('helmet')
 
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
-app.use(helmet())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'view'))
@@ -26,14 +24,14 @@ const cli = {
 io.on('connection', socket => {
 	usersConnected[socket.id] = socket.handshake.headers['user-agent']
 
-	io.emit('renderPast', pastMsgs)
+	if (pastMsgs.length > 0) io.to(socket.id).emit('renderPast', pastMsgs)
 
 	socket.on('userCommand', msg => {
 		cli.send({ msg })
 		commandCheck(cli)
 	})
 
-	socket.on('disconnect', (a, b) => {
+	socket.on('disconnect', () => {
 		delete usersConnected[socket.id]
 	})
 })
@@ -46,7 +44,7 @@ app.post('/', (req, res) => {
 	const { author, msg } = req.body
 	if (!author) return res.status(400).send('Author field is invalid')
 
-	pastMsgs.join({ author, msg })
+	pastMsgs.push({ author, msg })
 
 	cli.send({ author, msg })
 	return res.status(200).send()

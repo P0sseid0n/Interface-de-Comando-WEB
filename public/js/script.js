@@ -1,5 +1,6 @@
 const socket = io()
 const input = document.querySelector('input')
+let receivedPast = false
 
 input.addEventListener('keyup', event => {
 	if (event.key != 'Enter') return
@@ -16,7 +17,7 @@ window.addEventListener('keyup', e => {
 	input.focus()
 })
 
-socket.on('renderCommand', ({ author, msg }) => {
+const addOnHtml = ({ author, msg }) => {
 	const main = document.querySelector('main')
 	const p = document.createElement('p')
 
@@ -29,4 +30,12 @@ socket.on('renderCommand', ({ author, msg }) => {
 
 	main.append(p)
 	main.scrollTop = main.scrollHeight
+}
+
+socket.on('renderCommand', addOnHtml)
+
+socket.on('renderPast', past => {
+	if (receivedPast) return
+	past.forEach(addOnHtml)
+	receivedPast = true
 })

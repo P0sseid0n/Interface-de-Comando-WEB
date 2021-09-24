@@ -27,7 +27,6 @@ Recebe dados de outros projetos e passa para a interface
 
 ## 📝 Próximas features
 
--  [ ] Backend salvar dados não vistos
 -  [ ] Proteger rotas
 -  [ ] Mostrar usuários conectados
 
